@@ -1,10 +1,11 @@
 package main
 
 import (
+	"app/internal/env"
+	"fmt"
 	"html/template"
 	"io"
 	"net/http"
-	"os"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -19,17 +20,22 @@ type Name struct {
 }
 
 func main() {
+	err := env.Init()
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	e := echo.New()
 	e.Use(middleware.Logger())
 
 	e.Renderer = newTemplate()
-	name := Name { Name: "World" }
+	name := Name { Name: "Mellow Yellow" }
 
 	e.GET("/", func(c echo.Context) error {
 		return c.Render(http.StatusOK, "index", name)
 	})
 
-	port := os.Getenv("PORT")
+	port, _ := env.Get("APP_PORT")
 	if port == "" {
 		port = "1337"
 	}
