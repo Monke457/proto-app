@@ -1,15 +1,15 @@
 package env
 
 import (
-	"fmt"
+	"log/slog"
 	"os"
 	"strings"
 )
 
-func Init() error {
+func init() {
 	data, err := os.ReadFile(".env")
 	if err != nil {
-		return fmt.Errorf("Failed to read .env file")
+		slog.Warn("Failed to read .env file")
 	}
 
 	vars := parse(data)
@@ -26,18 +26,16 @@ func Init() error {
 	}
 
 	if len(failed) > 0 {
-		return fmt.Errorf("Failed to set variables: %s", failed) 
+		slog.Warn("Failed to set environment variables", "Variables", failed)
 	}
-
-	return nil
 }
 
-func Get(key string) (string, error) {
+func Get(key string) string {
 	value, ok := os.LookupEnv(key); 
 	if !ok {
-		return value, fmt.Errorf("Environment variable '%s' does not exist", key)
+		slog.Warn("Environment variable does not exist", "Key", key)
 	}
-	return value, nil
+	return value 
 }
 
 func parse(data []byte) map[string]string {

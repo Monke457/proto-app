@@ -6,6 +6,7 @@ services:
       - '${DB_PORT}:${DB_PORT}'
     volumes:
       - proto-data:/val/lib/postgres
+      - ./script:/docker-entrypoint-initdb.d
     env_file:
       - ./.env
     environment:
@@ -13,13 +14,13 @@ services:
       - 'POSTGRES_PASSWORD=${DB_USER_PW}'
       - 'POSTGRES_DB=${DB_NAME}'
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      test: ["CMD-SHELL", "psql -U ${DB_USER} -d ${DB_NAME} -f docker-entrypoint-initdb.d/init.sql"]
       interval: 5s
       timeout: 5s
       retries: 5
       start_period: 2s 
     restart: unless-stopped
-  server:
+  web:
     container_name: proto_web
     depends_on:
       db:
