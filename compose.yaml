@@ -5,7 +5,7 @@ services:
     ports: 
       - '${DB_PORT}:${DB_PORT}'
     volumes:
-      - proto-data:/val/lib/postgres
+      - proto-data:/val/lib/postgres/data
       - ./script:/docker-entrypoint-initdb.d
     env_file:
       - ./.env

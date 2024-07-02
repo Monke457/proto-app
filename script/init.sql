@@ -3,5 +3,6 @@ CREATE TABLE IF NOT EXISTS users(
 	firstname VARCHAR(50),
 	lastname VARCHAR(50),
 	email VARCHAR(50),
-	password VARCHAR(80)
+	password_hash BYTEA,
+	password_salt BYTEA
 );

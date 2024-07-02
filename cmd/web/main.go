@@ -1,6 +1,7 @@
 package main
 
 import (
+	"app/internal/db"
 	"app/internal/env"
 	"app/internal/renderer"
 	"net/http"
@@ -18,9 +19,11 @@ func main() {
 		port = "1337"
 	}
 
+	db.GenerateData()
+
 	e.Renderer = renderer.New()
-	e.GET("/tickets", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "tickets/index", "Tickets")
+	e.GET("/users", func(c echo.Context) error {
+		return c.Render(http.StatusOK, "users/index", "Users")
 	})
 
 	e.GET("/", func(c echo.Context) error {
