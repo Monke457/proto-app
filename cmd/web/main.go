@@ -3,8 +3,7 @@ package main
 import (
 	"app/internal/db"
 	"app/internal/env"
-	"app/internal/renderer"
-	"net/http"
+	"app/internal/controller"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -21,14 +20,9 @@ func main() {
 
 	db.GenerateData()
 
-	e.Renderer = renderer.New()
-	e.GET("/users", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "users/index", "Users")
-	})
+	e.Renderer = controller.New()
 
-	e.GET("/", func(c echo.Context) error {
-		return c.Render(http.StatusOK, "index", "Mellow Yellow")
-	})
+	controller.AddControllers(e)
 
 	e.Logger.Fatal(e.Start(":" + port))
 }
